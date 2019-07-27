@@ -1,0 +1,34 @@
+{% extends "resoapp/base.html" %}
+
+{% block content %}
+
+<h2>Dies ist die Liste aller Empfänger</h2>
+
+<table class="table">
+	<tr>
+		<th>
+			Name
+		</th>
+		<th>
+			Note
+		</th>
+		<th>
+			Email
+		</th>
+	</tr>
+	{% for recipient in recipient_list %}
+	<tr>
+		<td>
+			{{ recipient.title }}
+		</td>
+		<td>
+			{{ recipient.note }}
+		</td>
+		<td>
+			{{ recipient.email }}
+		</td>
+	</tr>
+	{% endfor %}
+</table>
+
+{% endblock %}
