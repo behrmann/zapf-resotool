@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-
+import resoapp.models
 
 class Migration(migrations.Migration):
 
@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Addressee',
+            name='Recipient',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=200)),
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='AddresseeCollection',
+            name='RecipientCollection',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=200)),
@@ -38,12 +38,12 @@ class Migration(migrations.Migration):
                 ('date_submitted', models.DateTimeField(auto_now_add=True)),
                 ('date_enacted', models.DateTimeField(blank=True, null=True)),
                 ('date_sent', models.DateField(blank=True, null=True)),
-                ('reso_type', models.IntegerField(choices=[(0, 'Resoution'), (1, 'Positionspapier'), (2, 'Selbstverpflichtung')], default=0)),
+                ('reso_type', models.IntegerField(choices=[(1, 'resolution'), (2, 'positionspapier'), (4, 'selbstverpflichtung')], default=resoapp.models.ResoType(1))),
                 ('reso_text', models.TextField()),
                 ('reso_text_html', models.TextField(default='')),
                 ('motivation_text', models.TextField(default='')),
                 ('motivation_text_html', models.TextField(default='')),
-                ('pdf_path', models.FilePathField(default='', path='~/git/zapf-resotool-resos')),
+                ('pdf_path', models.FilePathField(default='')),
             ],
         ),
         migrations.CreateModel(
@@ -68,18 +68,18 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('email_text', models.TextField()),
-                ('status', models.IntegerField(choices=[(0, 'success'), (1, 'failure'), (2, 'in progress'), (4, 'not sent')])),
-                ('addressee', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='resoapp.Addressee')),
+                ('status', models.IntegerField(choices=[(1, 'success'), (2, 'failure'), (4, 'in progress'), (8, 'not sent')])),
+                ('recipient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='resoapp.Recipient')),
                 ('resolution', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='resoapp.Resolution')),
             ],
         ),
         migrations.AddField(
-            model_name='addressee',
-            name='addressee_collection',
-            field=models.ManyToManyField(to='resoapp.AddresseeCollection'),
+            model_name='recipient',
+            name='recipient_collection',
+            field=models.ManyToManyField(to='resoapp.RecipientCollection'),
         ),
         migrations.AddField(
-            model_name='addressee',
+            model_name='recipient',
             name='resolutions',
             field=models.ManyToManyField(to='resoapp.Resolution'),
         ),
